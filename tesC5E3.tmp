@@ -1,0 +1,27 @@
+[gd_scene load_steps=5 format=3 uid="uid://da1iqw3dxfvwq"]
+
+[ext_resource type="PackedScene" uid="uid://b50dtn2oaxiey" path="res://player.tscn" id="1_gmb04"]
+[ext_resource type="Script" path="res://camera_2d.gd" id="2_d4sjs"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_hmaxl"]
+size = Vector2(743, 20)
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_evbxc"]
+
+[node name="TestLevel" type="Node2D"]
+
+[node name="StaticBody2D" type="StaticBody2D" parent="."]
+position = Vector2(1, 71)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="StaticBody2D"]
+position = Vector2(8.5, 0)
+shape = SubResource("RectangleShape2D_hmaxl")
+
+[node name="Player" parent="." instance=ExtResource("1_gmb04")]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Player"]
+shape = SubResource("CapsuleShape2D_evbxc")
+
+[node name="CustomCamera2D" type="Camera2D" parent="." node_paths=PackedStringArray("TargetNode")]
+script = ExtResource("2_d4sjs")
+TargetNode = NodePath("../Player")
