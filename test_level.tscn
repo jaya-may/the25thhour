@@ -2,11 +2,10 @@
 
 [ext_resource type="PackedScene" uid="uid://b50dtn2oaxiey" path="res://player.tscn" id="1_gmb04"]
 [ext_resource type="Script" path="res://camera_2d.gd" id="2_d4sjs"]
+[ext_resource type="PackedScene" uid="uid://d2lvreve3ab8u" path="res://fragment.tscn" id="3_7wgrf"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_hmaxl"]
 size = Vector2(589, 20)
-
-[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_evbxc"]
 
 [node name="TestLevel" type="Node2D"]
 
@@ -36,25 +35,19 @@ position = Vector2(657, -203)
 position = Vector2(1027, -11)
 shape = SubResource("RectangleShape2D_hmaxl")
 
+[node name="ff" type="CollisionShape2D" parent="StaticBody2D"]
+position = Vector2(-3721, -270)
+shape = SubResource("RectangleShape2D_hmaxl")
+
+[node name="CollisionShape2D2" type="CollisionShape2D" parent="StaticBody2D"]
+position = Vector2(3614, -365)
+shape = SubResource("RectangleShape2D_hmaxl")
+
 [node name="Player" parent="." instance=ExtResource("1_gmb04")]
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Player"]
-shape = SubResource("CapsuleShape2D_evbxc")
-
-[node name="Timer" type="Timer" parent="Player"]
-wait_time = 0.66
-one_shot = true
 
 [node name="CustomCamera2D" type="Camera2D" parent="." node_paths=PackedStringArray("TargetNode")]
 script = ExtResource("2_d4sjs")
 TargetNode = NodePath("../Player")
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-position = Vector2(-3720, -199)
-shape = SubResource("RectangleShape2D_hmaxl")
-
-[node name="CollisionShape2D2" type="CollisionShape2D" parent="."]
-position = Vector2(3615, -294)
-shape = SubResource("RectangleShape2D_hmaxl")
-
-[connection signal="timeout" from="Player/Timer" to="Player" method="_on_timer_timeout"]
+[node name="Fragment" parent="." instance=ExtResource("3_7wgrf")]
+position = Vector2(-254, -11)

@@ -3,6 +3,8 @@ extends CharacterBody2D
 enum CHAR_STATE {NORMAL,SLAM,DASH}
 var cur_state = CHAR_STATE.NORMAL
 
+var hp = 100
+
 #consts
 const SPEED = 300.0
 const JUMP_VELOCITY = -350.0
@@ -45,6 +47,8 @@ var prior_vel = 0
 var counter = 0
 var jumpBuffer = 0 
 
+func _ready():
+	add_to_group("Player")
 
 func _process(delta: float):
 	# --- GET INPUT ---
@@ -62,8 +66,6 @@ func _process(delta: float):
 		#run=true	
 	if Input.is_action_just_pressed("Slam") && not is_on_floor():
 		slam_this_frame = true
-	
-		
 
 func _physics_process(delta: float) -> void:
 	#print("Velocity: ", velocity)
@@ -160,4 +162,12 @@ func _physics_process(delta: float) -> void:
 			cur_state = CHAR_STATE.NORMAL
 		velocity.x = direction.x * SLAM_SIDEWAYS_SPEED 
 
+
+
+
+
 	move_and_slide()
+
+func modifyHp(hpChange: float)-> void:
+	hp+=hpChange
+	print("hp is now: ",hp)
