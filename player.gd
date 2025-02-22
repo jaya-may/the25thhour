@@ -1,6 +1,8 @@
 extends CharacterBody2D
 
-enum CHAR_STATE {NORMAL,SLAM,DASH}
+@onready var hitbox = $Hitbox  # Reference to the Hitbox Area2D
+
+enum CHAR_STATE {NORMAL,SLAM,DASH,ATTACK}
 var cur_state = CHAR_STATE.NORMAL
 
 var hp = 100
@@ -10,13 +12,19 @@ var melee_damage: float = -15.0
 var melee_range: float = 100.0  
 var facing_angle = 1
 
+var currentMeleeHit = 0
+var meleeFinisher = false
+var delayBetweenHits = 1
+var comboTimer = 0
+
+
 #consts
 const SPEED = 300.0
 const JUMP_VELOCITY = -350.0
 const AIR_DECEL = 400
 const AIR_ACEL = 500
-const GROUND_DECEL = 1500
-const GROUND_ACEL = 200
+const GROUND_DECEL = 1900
+const GROUND_ACEL = 300
 const AIR_SPEED_CAP = 800
 const GROUND_SPEED_CAP = 120
 const TIME_TO_BHOP = 0.02
@@ -60,7 +68,6 @@ func _ready():
 
 func _process(delta: float):
 	# --- GET INPUT ---
-
 	direction = Vector2(Input.get_axis("Left", "Right"), 0)
 	
 	if Input.is_action_just_pressed("Jump"):
@@ -76,16 +83,37 @@ func _process(delta: float):
 	if Input.is_action_just_pressed("Slam") && not is_on_floor():
 		slam_this_frame = true
 		
-	if Input.is_action_just_pressed("Melee") and cur_state == CHAR_STATE.NORMAL:
+	
+	if Input.is_action_just_pressed("Melee") && delayBetweenHits <= 0:
 		melee_attack()
+		
+	# and more melee logic
+	if(delayBetweenHits > 0): delayBetweenHits-=delta
+	comboTimer-=delta
+	if comboTimer<0 && delayBetweenHits < 0:
+		cur_state = CHAR_STATE.NORMAL
+		currentMeleeHit = 0
 
 func _physics_process(delta: float) -> void:
+	
+	
+			# You can call methods on the enemy here, like body.hit(damage)
 	#print("Velocity: ", velocity)
 	#print("Prior vel: ", prior_vel)
 	#print(counter)
 	jumpBuffer -= delta  # Decrease jump buffer over time
 	dashCounter+=delta
 	justSlammedGround-=delta
+	if(cur_state== CHAR_STATE.ATTACK):
+		if not is_on_floor():
+			velocity.y += ProjectSettings.get("physics/2d/default_gravity") * delta
+		
+		if is_on_floor():
+			velocity.x = move_toward(velocity.x, 0, GROUND_DECEL * delta)
+		else:
+			velocity.x = move_toward(velocity.x, 0, AIR_DECEL * delta)
+
+			
 	if(cur_state == CHAR_STATE.NORMAL):
 		# --- GRAVITY AND SHIT ---
 
@@ -192,31 +220,34 @@ func modifyHp(hpChange: float)-> void:
 	print("hp is now: ",hp)
 
 func melee_attack():
-	print("Player attacks!")
-
-	# Create a hitbox Area2D for melee attack
-	var attack_area = Area2D.new()
-	var shape = CollisionShape2D.new()
-	shape.shape = RectangleShape2D.new()
-	shape.shape.extents = Vector2(melee_range, 10)  # Small attack box
-	attack_area.add_child(shape)
-
-	# Enable monitoring
-	attack_area.monitoring = true
-	attack_area.collision_layer = 0  # Set to 0 so it doesn't interfere with physics
-	attack_area.collision_mask = 1  # Adjust this to match enemy collision layer
-
-	# Position the attack in front of the player
-	attack_area.global_position = global_position + Vector2(melee_range * sign(facing_angle), 0)
-	get_parent().add_child(attack_area)  # Add to the scene
-	await get_tree().process_frame
-
-	# Check for enemies and deal damage
-	print("we finna detect")
-	for body in attack_area.get_overlapping_bodies():
-		print("Detected body:", body.name)
-		if body.has_method("hit"):
-			body.hit(melee_damage)
-			print("Hit enemy:", body.name)
-
-	attack_area.queue_free()  # Remove the hitbox after checking
+	
+	print(comboTimer)
+	print(delayBetweenHits)
+	print(currentMeleeHit)
+	
+	cur_state = CHAR_STATE.ATTACK
+	print(currentMeleeHit)
+	if(currentMeleeHit==0):
+		#this is the start of a combo
+		comboTimer = 0.5
+		
+	else:
+		comboTimer+=0.35
+	
+	#throw out a hit
+	currentMeleeHit+=1
+	if(currentMeleeHit == 3):
+		meleeFinisher = true
+		currentMeleeHit = 0
+		delayBetweenHits =0.6
+		comboTimer=0
+		
+	var overlapping_bodies = hitbox.get_overlapping_areas()
+	# Loop through each body and print its name (or do something else)
+	for body in overlapping_bodies:
+		print("Hitbox intersects with:", body.name)
+		if body.is_in_group("Enemy"):
+			delayBetweenHits+=0.1
+			
+			print("This is an enemy!")
+	print("fucking stupid shit")
