@@ -1,0 +1,19 @@
+[remap]
+
+importer="mp3"
+type="AudioStreamMP3"
+uid="uid://cfv41wu457gil"
+path="res://.godot/imported/goodbye idiot.mp3-71071bcb732867b8fcb97b55f8df84e0.mp3str"
+
+[deps]
+
+source_file="res://sounds/goodbye idiot.mp3"
+dest_files=["res://.godot/imported/goodbye idiot.mp3-71071bcb732867b8fcb97b55f8df84e0.mp3str"]
+
+[params]
+
+loop=false
+loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4
