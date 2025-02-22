@@ -15,7 +15,7 @@ position = Vector2(1, 71)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="StaticBody2D"]
 position = Vector2(-22, 0)
-scale = Vector2(10, 1)
+scale = Vector2(15, 1)
 shape = SubResource("RectangleShape2D_hmaxl")
 
 [node name="StaticBody2D" type="StaticBody2D" parent="StaticBody2D"]
@@ -23,6 +23,10 @@ position = Vector2(-622, -187)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="StaticBody2D/StaticBody2D"]
 position = Vector2(3, 2)
+shape = SubResource("RectangleShape2D_hmaxl")
+
+[node name="CollisionShape2D2" type="CollisionShape2D" parent="StaticBody2D/StaticBody2D"]
+position = Vector2(1166, -152)
 shape = SubResource("RectangleShape2D_hmaxl")
 
 [node name="StaticBody2D2" type="StaticBody2D" parent="StaticBody2D"]
@@ -44,5 +48,13 @@ one_shot = true
 [node name="CustomCamera2D" type="Camera2D" parent="." node_paths=PackedStringArray("TargetNode")]
 script = ExtResource("2_d4sjs")
 TargetNode = NodePath("../Player")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(-3720, -199)
+shape = SubResource("RectangleShape2D_hmaxl")
+
+[node name="CollisionShape2D2" type="CollisionShape2D" parent="."]
+position = Vector2(3615, -294)
+shape = SubResource("RectangleShape2D_hmaxl")
 
 [connection signal="timeout" from="Player/Timer" to="Player" method="_on_timer_timeout"]
