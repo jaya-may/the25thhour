@@ -1,6 +1,7 @@
-[gd_scene load_steps=4 format=3 uid="uid://d2lvreve3ab8u"]
+[gd_scene load_steps=5 format=3 uid="uid://d2lvreve3ab8u"]
 
 [ext_resource type="Script" path="res://fragment.gd" id="1_kgpsh"]
+[ext_resource type="PackedScene" uid="uid://cs6ds0iby2fvq" path="res://EnemyAssets/Fragment/FragmentSprite.tscn" id="2_wa2mw"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_osmxf"]
 
@@ -13,7 +14,7 @@ collision_mask = 0
 gravity_scale = 0.0
 script = ExtResource("1_kgpsh")
 
-[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+[node name="FragmentSprite" parent="." instance=ExtResource("2_wa2mw")]
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 shape = SubResource("CircleShape2D_osmxf")

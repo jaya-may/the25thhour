@@ -1,0 +1,115 @@
+[gd_scene load_steps=7 format=3 uid="uid://cs6ds0iby2fvq"]
+
+[ext_resource type="Texture2D" uid="uid://cvjhr3j0xf1kw" path="res://EnemyAssets/Fragment/fragment_body.png" id="1_k745e"]
+[ext_resource type="Texture2D" uid="uid://b5xj0r2rnhlnd" path="res://EnemyAssets/Fragment/fragment_halo.png" id="2_7tpvb"]
+
+[sub_resource type="Animation" id="Animation_5rkf1"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Fragment/Halo:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(0, 30)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Fragment/Halo:rotation")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [0.441568]
+}
+
+[sub_resource type="Animation" id="Animation_6p1f1"]
+resource_name = "idle"
+length = 2.0
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Fragment/Halo:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(-0.0333333, 1),
+"transitions": PackedFloat32Array(0.554785, 0.615572),
+"update": 0,
+"values": [Vector2(0, 30), Vector2(0, -40)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Fragment/Halo:rotation")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [-0.973894]
+}
+
+[sub_resource type="Animation" id="Animation_2h8nj"]
+resource_name = "laser"
+length = 3.0
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Fragment/Halo:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 1.7, 2),
+"transitions": PackedFloat32Array(0.353553, 3.36358, 3.86374),
+"update": 0,
+"values": [Vector2(0, 0), Vector2(33.57, -65.32), Vector2(40, -33)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Fragment/Halo:rotation")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 1.63333, 2),
+"transitions": PackedFloat32Array(1, 4.5948, 1),
+"update": 0,
+"values": [-0.973894, -0.0890118, -0.00174533]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_mouy4"]
+_data = {
+"RESET": SubResource("Animation_5rkf1"),
+"idle": SubResource("Animation_6p1f1"),
+"laser": SubResource("Animation_2h8nj")
+}
+
+[node name="FragmentSprite" type="Node2D"]
+
+[node name="Fragment" type="Node2D" parent="."]
+scale = Vector2(0.13, 0.13)
+
+[node name="Body" type="Sprite2D" parent="Fragment"]
+position = Vector2(29, 0)
+texture = ExtResource("1_k745e")
+
+[node name="Halo" type="Sprite2D" parent="Fragment"]
+position = Vector2(0, 30)
+rotation = 0.441568
+texture = ExtResource("2_7tpvb")
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+libraries = {
+"": SubResource("AnimationLibrary_mouy4")
+}
+autoplay = "idle"

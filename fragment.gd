@@ -14,7 +14,7 @@ var player = null
 var attacking = false 
 
 @onready var detection_area = $Area2D  
-@onready var animated_sprite = $AnimatedSprite2D
+@onready var animator = $FragmentSprite/AnimationPlayer
 var windup_timer = 2
 
 

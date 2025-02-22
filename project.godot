@@ -19,6 +19,10 @@ config/icon="res://icon.svg"
 
 window/vsync/vsync_mode=0
 
+[dotnet]
+
+project/assembly_name="The25thHour"
+
 [input]
 
 Dash={
