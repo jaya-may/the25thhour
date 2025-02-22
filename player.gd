@@ -51,6 +51,7 @@ var justSlammedGround = 0
 
 #some more other shit
 var prior_vel = 0
+var prior_facing_angle = 1
 var counter = 0
 var jumpBuffer = 0 
 
@@ -141,10 +142,11 @@ func _physics_process(delta: float) -> void:
 			jump_pressed = false
 			
 		if jumpBuffer > 0 and is_on_floor():
-			if counter < TIME_TO_BHOP && abs(velocity.x)>150:
+			if counter < TIME_TO_BHOP && abs(velocity.x)>150 && facing_angle == prior_facing_angle:
 				print("hi")
 				velocity.x = prior_vel
 			counter  = 0
+			prior_facing_angle = facing_angle
 				
 			velocity.y = JUMP_VELOCITY - abs(velocity.x)/15
 			if direction.x != 0:
@@ -207,11 +209,10 @@ func melee_attack():
 	# Position the attack in front of the player
 	attack_area.global_position = global_position + Vector2(melee_range * sign(facing_angle), 0)
 	get_parent().add_child(attack_area)  # Add to the scene
-
-	# Wait one frame to ensure the hitbox is processed
 	await get_tree().process_frame
 
 	# Check for enemies and deal damage
+	print("we finna detect")
 	for body in attack_area.get_overlapping_bodies():
 		print("Detected body:", body.name)
 		if body.has_method("hit"):
