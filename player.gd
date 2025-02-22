@@ -5,6 +5,11 @@ var cur_state = CHAR_STATE.NORMAL
 
 var hp = 100
 
+#melee
+var melee_damage: float = -15.0  
+var melee_range: float = 100.0  
+var facing_angle = 1
+
 #consts
 const SPEED = 300.0
 const JUMP_VELOCITY = -350.0
@@ -18,8 +23,8 @@ const TIME_TO_BHOP = 0.02
 const JUMP_BUFFER_TIME = 0.1  
 const RUN_SPEED = 100
 const JUMP_BOOST_DIV = 15
-const DASH_SPEED = 200
-const DASH_COOLDOWN = 1
+const DASH_SPEED = 100
+const DASH_COOLDOWN = .7
 
 #working vars
 var direction:Vector2 = Vector2.ZERO
@@ -41,6 +46,8 @@ const SLAM_STARTUP = .1
 var slam_counter = 0
 var slam_this_frame = false
 var slam_just_started = false
+var justSlammedGround = 0
+
 
 #some more other shit
 var prior_vel = 0
@@ -54,6 +61,7 @@ func _process(delta: float):
 	# --- GET INPUT ---
 
 	direction = Vector2(Input.get_axis("Left", "Right"), 0)
+	
 	if Input.is_action_just_pressed("Jump"):
 		jump_pressed = true
 	if Input.is_action_pressed("Jump"):
@@ -66,6 +74,9 @@ func _process(delta: float):
 		#run=true	
 	if Input.is_action_just_pressed("Slam") && not is_on_floor():
 		slam_this_frame = true
+		
+	if Input.is_action_just_pressed("Melee") and cur_state == CHAR_STATE.NORMAL:
+		melee_attack()
 
 func _physics_process(delta: float) -> void:
 	#print("Velocity: ", velocity)
@@ -73,7 +84,7 @@ func _physics_process(delta: float) -> void:
 	#print(counter)
 	jumpBuffer -= delta  # Decrease jump buffer over time
 	dashCounter+=delta
-	
+	justSlammedGround-=delta
 	if(cur_state == CHAR_STATE.NORMAL):
 		# --- GRAVITY AND SHIT ---
 
@@ -94,9 +105,14 @@ func _physics_process(delta: float) -> void:
 		#if direction.x != 0:
 		if dash_this_frame && direction.x!=0:
 			velocity.x += DASH_SPEED * sign(direction.x)
+			if(justSlammedGround > 0):
+				velocity.x += DASH_SPEED * 2 * sign(direction.x)
+				justSlammedGround = 0
 			dash_this_frame=false
 
 		if direction.x!=0:
+			if(direction.x<1): facing_angle=-1
+			else: facing_angle=1
 			if is_on_floor():
 				var add = 0
 				if run == true:
@@ -159,6 +175,7 @@ func _physics_process(delta: float) -> void:
 		else:
 			velocity.y = SLAM_DOWNWARDS_SPEED
 		if is_on_floor():
+			justSlammedGround = .2
 			cur_state = CHAR_STATE.NORMAL
 		velocity.x = direction.x * SLAM_SIDEWAYS_SPEED 
 
@@ -171,3 +188,34 @@ func _physics_process(delta: float) -> void:
 func modifyHp(hpChange: float)-> void:
 	hp+=hpChange
 	print("hp is now: ",hp)
+
+func melee_attack():
+	print("Player attacks!")
+
+	# Create a hitbox Area2D for melee attack
+	var attack_area = Area2D.new()
+	var shape = CollisionShape2D.new()
+	shape.shape = RectangleShape2D.new()
+	shape.shape.extents = Vector2(melee_range, 10)  # Small attack box
+	attack_area.add_child(shape)
+
+	# Enable monitoring
+	attack_area.monitoring = true
+	attack_area.collision_layer = 0  # Set to 0 so it doesn't interfere with physics
+	attack_area.collision_mask = 1  # Adjust this to match enemy collision layer
+
+	# Position the attack in front of the player
+	attack_area.global_position = global_position + Vector2(melee_range * sign(facing_angle), 0)
+	get_parent().add_child(attack_area)  # Add to the scene
+
+	# Wait one frame to ensure the hitbox is processed
+	await get_tree().process_frame
+
+	# Check for enemies and deal damage
+	for body in attack_area.get_overlapping_bodies():
+		print("Detected body:", body.name)
+		if body.has_method("hit"):
+			body.hit(melee_damage)
+			print("Hit enemy:", body.name)
+
+	attack_area.queue_free()  # Remove the hitbox after checking

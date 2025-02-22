@@ -56,10 +56,10 @@ func _process(delta: float) -> void:
 			if(global_position.distance_to(player.global_position) > attack_radius):
 				windup_timer=120
 				state = ENEMY_STATE.APPROACH
-			else:
-				windup_timer = 2
-				print("kills you.")
-				state = ENEMY_STATE.ATTACK
+			#else:
+			windup_timer = 2
+			print("kills you.")
+			state = ENEMY_STATE.ATTACK
 	if(state==ENEMY_STATE.ATTACK):
 		var laser = preload("res://laser.tscn").instantiate()
 		get_parent().add_child(laser)  # Make sure the laser is added to the scene tree
