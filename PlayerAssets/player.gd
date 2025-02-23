@@ -12,6 +12,9 @@ var hitSound = preload("res://sounds/playersounds/hurtsound.mp3")
 var dashSound = preload("res://sounds/playersounds/dash.mp3")
 @onready var dash_player = $Dashy 
 
+var slamSound = preload("res://slam.mp3")
+@onready var slam_player = $SlamPlayer 
+
 
 var punch = preload("res://sounds/playersounds/punch.mp3")
 var finisherSound = preload("res://sounds/playersounds/finisher.mp3")
@@ -89,14 +92,14 @@ func _ready():
 	add_to_group("Player")
 
 func _process(delta: float):
-	print(global_position.x)
-	if global_position.x > 5700:
+	#print(global_position.x)
+	if global_position.x > 5700 && global_position.y > 600:
 		get_tree().change_scene_to_file("res://final_boss.tscn")
 
 	#print("hp: ",hp)
 	#print(global_position.y)
 	if(hp<0 or global_position.y > 700):
-		get_tree().change_scene_to_file("res://mainscene.tscn")
+		get_tree().change_scene_to_file("res://gg.tscn")
 		
 	# --- GET INPUT ---
 
@@ -152,6 +155,8 @@ func _physics_process(delta: float) -> void:
 		for body in overlap:
 			#print("Hitbox intersects with:", body.name)
 			if body.get_parent().has_method("Hit"):
+				dash_player.stream = slamSound
+				dash_player.play()
 				body.get_parent().Slam(melee_damage/2,self.global_position,facing_angle)
 				velocity.y = -450
 				cur_state = CHAR_STATE.NORMAL
@@ -282,6 +287,8 @@ func slamPhysics(delta: float) -> void:
 	else:
 		velocity.y = SLAM_DOWNWARDS_SPEED
 	if is_on_floor():
+		dash_player.stream = slamSound
+		dash_player.play()
 		justSlammedGround = SLAMSTORE_LENIENCY
 		cur_state = CHAR_STATE.NORMAL
 	velocity.x = direction.x * SLAM_SIDEWAYS_SPEED 
@@ -343,7 +350,7 @@ func melee_attack():
 		finisher_player.stream = finisherSound
 		finisher_player.play()
 		endlag = 0.8
-		finisher = 1.5
+		finisher = 2
 		
 
 	var overlap

@@ -1,7 +1,12 @@
-[gd_scene load_steps=5 format=3 uid="uid://bd8j1qqqtfax6"]
+[gd_scene load_steps=11 format=3 uid="uid://bd8j1qqqtfax6"]
 
 [ext_resource type="Script" path="res://final_boss.gd" id="1_000aq"]
 [ext_resource type="PackedScene" uid="uid://b50dtn2oaxiey" path="res://PlayerAssets/player.tscn" id="2_vrbuq"]
+[ext_resource type="Shader" path="res://Scenery/Platform.gdshader" id="3_8a2j0"]
+[ext_resource type="Texture2D" uid="uid://b6hw0spu0jxfg" path="res://icon.svg" id="4_u8nye"]
+[ext_resource type="Texture2D" uid="uid://uxvgyscprhfy" path="res://Cradle_of_Life.webp" id="5_v3pia"]
+[ext_resource type="AudioStream" uid="uid://by6ip558nllv5" path="res://The Nebbening 2 ChoirDroneLow(1).wav" id="6_3lw5d"]
+[ext_resource type="PackedScene" path="res://UI.tscn" id="7_dwqm8"]
 
 [sub_resource type="WorldBoundaryShape2D" id="WorldBoundaryShape2D_aq1q7"]
 distance = -80.0
@@ -9,15 +14,19 @@ distance = -80.0
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_b0pfm"]
 size = Vector2(158, 20)
 
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_bnfy6"]
+shader = ExtResource("3_8a2j0")
+shader_parameter/basecolor = Color(0.0890431, 0.145396, 0.178001, 1)
+
 [node name="FinalBoss" type="Node2D"]
 position = Vector2(0, -27)
 script = ExtResource("1_000aq")
 
 [node name="Spawn1" type="Node2D" parent="."]
-position = Vector2(-663, 142)
+position = Vector2(-580, 140)
 
 [node name="Spawn2" type="Node2D" parent="."]
-position = Vector2(689, 127)
+position = Vector2(576, 147)
 
 [node name="ShootTimer" type="Timer" parent="."]
 
@@ -28,14 +37,15 @@ position = Vector2(-1, 100)
 shape = SubResource("WorldBoundaryShape2D_aq1q7")
 
 [node name="StaticBody2D2" type="StaticBody2D" parent="."]
-position = Vector2(-686, 31)
+position = Vector2(-502, 86)
 rotation = 1.57272
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="StaticBody2D2"]
+position = Vector2(2.03271, 16.9962)
 shape = SubResource("WorldBoundaryShape2D_aq1q7")
 
 [node name="StaticBody2D3" type="StaticBody2D" parent="."]
-position = Vector2(691, 5)
+position = Vector2(510, 102)
 rotation = 4.70972
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="StaticBody2D3"]
@@ -44,10 +54,38 @@ shape = SubResource("WorldBoundaryShape2D_aq1q7")
 [node name="Camera2D" type="Camera2D" parent="."]
 
 [node name="Player" parent="." instance=ExtResource("2_vrbuq")]
-position = Vector2(-1, -384)
+position = Vector2(4, -587)
 
 [node name="StaticBody2D4" type="StaticBody2D" parent="."]
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="StaticBody2D4"]
 position = Vector2(-2, 48)
 shape = SubResource("RectangleShape2D_b0pfm")
+
+[node name="Sprite2D2" type="Sprite2D" parent="."]
+material = SubResource("ShaderMaterial_bnfy6")
+position = Vector2(72, 485)
+scale = Vector2(26.875, 4.69531)
+texture = ExtResource("4_u8nye")
+
+[node name="Sprite2D3" type="Sprite2D" parent="."]
+material = SubResource("ShaderMaterial_bnfy6")
+position = Vector2(-1.49988, 50)
+scale = Vector2(1.24219, 0.18164)
+texture = ExtResource("4_u8nye")
+
+[node name="CradleOfLife" type="Sprite2D" parent="."]
+z_index = -635
+position = Vector2(-3, -248)
+texture = ExtResource("5_v3pia")
+
+[node name="AudioStreamPlayer2D" type="AudioStreamPlayer2D" parent="CradleOfLife"]
+stream = ExtResource("6_3lw5d")
+volume_db = -10.045
+autoplay = true
+
+[node name="Control" parent="." instance=ExtResource("7_dwqm8")]
+offset_left = -563.0
+offset_top = -312.0
+offset_right = -374.0
+offset_bottom = -278.0

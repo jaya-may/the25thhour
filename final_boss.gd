@@ -74,6 +74,8 @@ func _process(delta: float) -> void:
 			if(counter > 2):
 				current_phase = 7
 				counter = 0
+				get_tree().change_scene_to_file("res://win.tscn")
+
 
 func count_prisms_in_scene() -> int:
 	var prisms_in_scene = get_tree().get_nodes_in_group("Enemy")

@@ -1,4 +1,4 @@
-[gd_scene load_steps=19 format=3 uid="uid://ubkeach00cvq"]
+[gd_scene load_steps=22 format=3 uid="uid://ubkeach00cvq"]
 
 [ext_resource type="PackedScene" uid="uid://b50dtn2oaxiey" path="res://PlayerAssets/player.tscn" id="1_q4mjj"]
 [ext_resource type="Texture2D" uid="uid://cpio0lypvmlm4" path="res://Scenery/BG1 (up to Artemis).png" id="1_ul67v"]
@@ -8,6 +8,9 @@
 [ext_resource type="Texture2D" uid="uid://b6hw0spu0jxfg" path="res://icon.svg" id="3_o4v3b"]
 [ext_resource type="PackedScene" uid="uid://b8bf6sdmc2hio" path="res://prism.tscn" id="4_ikhfe"]
 [ext_resource type="PackedScene" path="res://UI.tscn" id="7_ork3y"]
+[ext_resource type="AudioStream" uid="uid://cj7g2rrqkeqec" path="res://Dark-Knight-chosic.com_.mp3" id="8_8dyps"]
+[ext_resource type="Texture2D" uid="uid://uxvgyscprhfy" path="res://Cradle_of_Life.webp" id="9_184f8"]
+[ext_resource type="AudioStream" uid="uid://by6ip558nllv5" path="res://The Nebbening 2 ChoirDroneLow(1).wav" id="10_7kxer"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_ye0qq"]
 shader = ExtResource("2_uj06r")
@@ -76,6 +79,30 @@ position = Vector2(-3201, 325.5)
 scale = Vector2(26.875, 4.69531)
 texture = ExtResource("3_o4v3b")
 
+[node name="Sprite2D7" type="Sprite2D" parent="Platforms"]
+material = SubResource("ShaderMaterial_ye0qq")
+position = Vector2(-2981, -120.25)
+scale = Vector2(8.25, 0.316405)
+texture = ExtResource("3_o4v3b")
+
+[node name="Sprite2D8" type="Sprite2D" parent="Platforms"]
+material = SubResource("ShaderMaterial_ye0qq")
+position = Vector2(-2981, -120.25)
+scale = Vector2(8.25, 0.316405)
+texture = ExtResource("3_o4v3b")
+
+[node name="Sprite2D9" type="Sprite2D" parent="Platforms"]
+material = SubResource("ShaderMaterial_ye0qq")
+position = Vector2(-469, -202.625)
+scale = Vector2(3.20312, 0.18164)
+texture = ExtResource("3_o4v3b")
+
+[node name="Sprite2D10" type="Sprite2D" parent="Platforms"]
+material = SubResource("ShaderMaterial_ye0qq")
+position = Vector2(422.5, -122)
+scale = Vector2(1.88281, 0.18164)
+texture = ExtResource("3_o4v3b")
+
 [node name="Sprite2D5" type="Sprite2D" parent="Platforms"]
 material = SubResource("ShaderMaterial_ye0qq")
 position = Vector2(-4804, 81.25)
@@ -84,8 +111,8 @@ texture = ExtResource("3_o4v3b")
 
 [node name="Sprite2D3" type="Sprite2D" parent="Platforms"]
 material = SubResource("ShaderMaterial_ye0qq")
-position = Vector2(3528, 369)
-scale = Vector2(45.4531, 6.48438)
+position = Vector2(2858, 369)
+scale = Vector2(34.9844, 6.48438)
 texture = ExtResource("3_o4v3b")
 
 [node name="Sprite2D6" type="Sprite2D" parent="Platforms"]
@@ -237,10 +264,26 @@ offset_top = -321.0
 offset_right = -340.0
 offset_bottom = -288.0
 
+[node name="AudioStreamPlayer2D" type="AudioStreamPlayer2D" parent="CustomCamera2D"]
+stream = ExtResource("8_8dyps")
+volume_db = -4.66
+autoplay = true
+
 [node name="Prism" parent="." instance=ExtResource("4_ikhfe")]
 position = Vector2(4526, -147)
 
 [node name="Node2D" type="Node2D" parent="."]
 position = Vector2(6790, -31)
+
+[node name="CradleOfLife" type="Sprite2D" parent="."]
+z_index = -85
+position = Vector2(6281, 600)
+scale = Vector2(3.3875, 3.94699)
+texture = ExtResource("9_184f8")
+
+[node name="AudioStreamPlayer2D" type="AudioStreamPlayer2D" parent="CradleOfLife"]
+stream = ExtResource("10_7kxer")
+volume_db = -5.87
+autoplay = true
 
 [connection signal="healthValue" from="Player" to="CustomCamera2D/Control" method="_on_player_health_value"]

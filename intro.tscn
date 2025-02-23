@@ -1,0 +1,14 @@
+[gd_scene load_steps=3 format=3 uid="uid://c0sh1kstaxl8h"]
+
+[ext_resource type="Script" path="res://node_2d.gd" id="1_rqhqu"]
+[ext_resource type="VideoStream" path="res://25th_Hour_Intro-720p30.ogv" id="2_d4a8m"]
+
+[node name="Node2D" type="Node2D"]
+script = ExtResource("1_rqhqu")
+
+[node name="VideoStreamPlayer2" type="VideoStreamPlayer" parent="."]
+offset_right = 1155.0
+offset_bottom = 652.0
+stream = ExtResource("2_d4a8m")
+autoplay = true
+expand = true
