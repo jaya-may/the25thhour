@@ -64,7 +64,7 @@ var dash_this_frame = false
 var dashCounter = 0
 
 #slam
-const SLAM_JUMP_HEIGHT = 50
+const SLAM_JUMP_HEIGHT = 100	
 const SLAM_DOWNWARDS_SPEED = 500
 const SLAM_SIDEWAYS_SPEED = 100
 const SLAM_STARTUP = .1
@@ -86,8 +86,9 @@ func _ready():
 
 func _process(delta: float):
 	#print("hp: ",hp)
-	if(hp<0):
-		queue_free()
+	#print(global_position.y)
+	if(hp<0 or global_position.y > 400):
+		get_tree().change_scene_to_file("res://mainscene.tscn")
 		
 	# --- GET INPUT ---
 

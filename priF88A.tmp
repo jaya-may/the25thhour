@@ -3,9 +3,8 @@
 [ext_resource type="PackedScene" uid="uid://d2vage21b5686" path="res://EnemyAssets/Prism/PrismSprite.tscn" id="1_x46x0"]
 [ext_resource type="Script" path="res://prism.gd" id="1_x66eh"]
 
-[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_mybo6"]
-radius = 27.5
-height = 180.0
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_xv5fr"]
+size = Vector2(23, 178)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_78ism"]
 size = Vector2(20, 59.3333)
@@ -25,8 +24,8 @@ lock_rotation = true
 script = ExtResource("1_x66eh")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-position = Vector2(6, 0)
-shape = SubResource("CapsuleShape2D_mybo6")
+position = Vector2(1.5, -2)
+shape = SubResource("RectangleShape2D_xv5fr")
 
 [node name="PrismSprite" parent="." instance=ExtResource("1_x46x0")]
 
@@ -60,6 +59,3 @@ position = Vector2(43.5, -2)
 shape = SubResource("RectangleShape2D_8x0h6")
 
 [node name="Swing" type="AudioStreamPlayer2D" parent="."]
-
-[node name="RayCast2D" type="RayCast2D" parent="."]
-position = Vector2(-2, 81)

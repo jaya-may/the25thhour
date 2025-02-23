@@ -20,7 +20,7 @@ var attacking = false
 @onready var hitboxL = $HitboxL  
 @onready var hitboxR = $HitboxR  
 
-
+@onready var raycast = $RayCast2D  # RayCast2D node to detect ground
 @onready var audio_player = $AudioStreamPlayer2D 
 @onready var swingPlayer = $Swing 
 
@@ -36,7 +36,7 @@ var swingSound = preload("res://sounds/prism/swing.wav")
 var facing_angle = -1
 
 var hitboxesActive = false
-
+var lastLaserTime = 0
 
 #consts
 
@@ -60,7 +60,8 @@ func _ready() -> void:
 
 func _physics_process(delta: float) -> void:
 	
-	
+	if(global_position.y > 400):
+		queue_free()
 	move_and_collide(velocity * delta)
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -94,11 +95,15 @@ func _process(delta: float) -> void:
 		velocity.x = (direction_to_home * speed/3).x  # Move towards home base
 		
 	elif (state == ENEMY_STATE.APPROACH):
+		
 		windUpTimer = 0
 		if player!=null:
 			#print("approach")
 			var direction_to_player = (player.global_position - global_position).normalized()
 			velocity.x = (direction_to_player * speed).x
+			# If the raycast detects no ground in front, stop the movement
+			#if !raycast.is_colliding():
+				#velocity.x = 0  # Prevent movement if there is no ground
 			if(global_position.distance_to(player.global_position) < attack_radius):
 				state = ENEMY_STATE.WINDUP
 		else:
@@ -120,6 +125,15 @@ func _process(delta: float) -> void:
 		print(counterPhase)
 		counterTimer+=delta
 		if(counterPhase==0):
+			if counterTimer - lastLaserTime >= 0.05:
+				lastLaserTime = counterTimer  # Update last spawn time
+				var laser = preload("res://prism_trail.tscn").instantiate()
+				get_parent().add_child(laser)  # Make sure the laser is added to the scene tree
+				laser.global_position = global_position  # Spawn at enemy position
+				if(facing_angle == 1):
+					laser.scale.x = 1
+				else:
+					laser.scale.x =-1
 			
 			var direction_to_player = (player.global_position - global_position).normalized()
 			velocity.x = (-direction_to_player*speed*3).x
@@ -178,6 +192,7 @@ func Slam(damage: float, playerpos: Vector2, facing_angle: int) -> void:
 			audio_player.stream = punishment[randi() % punishment.size()]   # Pick a random sound
 			audio_player.play()
 		state = ENEMY_STATE.COUNTER
+		lastLaserTime = 0
 		counterPhase = 0
 		
 
@@ -188,6 +203,7 @@ func Hit(damage: float, playerpos: Vector2, facing_angle: int) -> void:
 			audio_player.stream = punishment[randi() % punishment.size()]   # Pick a random sound
 			audio_player.play()
 		state = ENEMY_STATE.COUNTER
+		lastLaserTime = 0
 		counterPhase = 0
 		
 	hp += damage

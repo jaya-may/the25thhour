@@ -1,7 +1,7 @@
 [gd_scene load_steps=6 format=3 uid="uid://da1iqw3dxfvwq"]
 
 [ext_resource type="PackedScene" uid="uid://b50dtn2oaxiey" path="res://player.tscn" id="1_gmb04"]
-[ext_resource type="Script" path="res://camera_2d.gd" id="2_d4sjs"]
+[ext_resource type="PackedScene" uid="uid://co13brj2pgpmj" path="res://custom_camera_2d.tscn" id="2_21kt7"]
 [ext_resource type="PackedScene" uid="uid://d2lvreve3ab8u" path="res://fragment.tscn" id="3_7wgrf"]
 [ext_resource type="PackedScene" uid="uid://b8bf6sdmc2hio" path="res://prism.tscn" id="4_j02sv"]
 
@@ -46,9 +46,7 @@ shape = SubResource("RectangleShape2D_hmaxl")
 
 [node name="Player" parent="." instance=ExtResource("1_gmb04")]
 
-[node name="CustomCamera2D" type="Camera2D" parent="." node_paths=PackedStringArray("TargetNode")]
-script = ExtResource("2_d4sjs")
-TargetNode = NodePath("../Player")
+[node name="CustomCamera2D" parent="." instance=ExtResource("2_21kt7")]
 
 [node name="Fragment" parent="." instance=ExtResource("3_7wgrf")]
 position = Vector2(-470, -8)
