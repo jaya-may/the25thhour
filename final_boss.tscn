@@ -1,0 +1,53 @@
+[gd_scene load_steps=5 format=3 uid="uid://bd8j1qqqtfax6"]
+
+[ext_resource type="Script" path="res://final_boss.gd" id="1_000aq"]
+[ext_resource type="PackedScene" uid="uid://b50dtn2oaxiey" path="res://PlayerAssets/player.tscn" id="2_vrbuq"]
+
+[sub_resource type="WorldBoundaryShape2D" id="WorldBoundaryShape2D_aq1q7"]
+distance = -80.0
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_b0pfm"]
+size = Vector2(158, 20)
+
+[node name="FinalBoss" type="Node2D"]
+position = Vector2(0, -27)
+script = ExtResource("1_000aq")
+
+[node name="Spawn1" type="Node2D" parent="."]
+position = Vector2(-663, 142)
+
+[node name="Spawn2" type="Node2D" parent="."]
+position = Vector2(689, 127)
+
+[node name="ShootTimer" type="Timer" parent="."]
+
+[node name="StaticBody2D" type="StaticBody2D" parent="."]
+position = Vector2(-1, 100)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="StaticBody2D"]
+shape = SubResource("WorldBoundaryShape2D_aq1q7")
+
+[node name="StaticBody2D2" type="StaticBody2D" parent="."]
+position = Vector2(-686, 31)
+rotation = 1.57272
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="StaticBody2D2"]
+shape = SubResource("WorldBoundaryShape2D_aq1q7")
+
+[node name="StaticBody2D3" type="StaticBody2D" parent="."]
+position = Vector2(691, 5)
+rotation = 4.70972
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="StaticBody2D3"]
+shape = SubResource("WorldBoundaryShape2D_aq1q7")
+
+[node name="Camera2D" type="Camera2D" parent="."]
+
+[node name="Player" parent="." instance=ExtResource("2_vrbuq")]
+position = Vector2(-1, -384)
+
+[node name="StaticBody2D4" type="StaticBody2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="StaticBody2D4"]
+position = Vector2(-2, 48)
+shape = SubResource("RectangleShape2D_b0pfm")

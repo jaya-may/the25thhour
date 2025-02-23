@@ -14,6 +14,11 @@ var player_detected = false
 
 var player = null  
 var attacking = false 
+var deathTimer = 0
+
+signal died
+
+@export var TargetNode: Node2D = null
 
 #audio
 @onready var detection_area = $Detect  
@@ -52,6 +57,7 @@ var whereToDash
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
+	print("Prism spawned at:", global_position)
 	if(homeBase == Vector2.ZERO):
 		homeBase = global_position
 	detection_area.body_entered.connect(_on_player_entered)
@@ -60,9 +66,15 @@ func _ready() -> void:
 
 
 func _physics_process(delta: float) -> void:
-	
+	#print(global_position)
 	if(global_position.y > 400):
-		queue_free()
+		velocity *=0
+		deathTimer = 0
+		
+		deathTimer+=delta
+		if(deathTimer > 1):
+			print("stayed too low")
+			queue_free()
 	move_and_collide(velocity * delta)
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -83,6 +95,7 @@ func _process(delta: float) -> void:
 	
 	#kil if die
 	if(hp < 0):
+		died.emit()
 		queue_free()
 		
 	if(hitboxesActive):

@@ -89,9 +89,13 @@ func _ready():
 	add_to_group("Player")
 
 func _process(delta: float):
+	print(global_position.x)
+	if global_position.x > 5700:
+		get_tree().change_scene_to_file("res://final_boss.tscn")
+
 	#print("hp: ",hp)
 	#print(global_position.y)
-	if(hp<0 or global_position.y > 400):
+	if(hp<0 or global_position.y > 700):
 		get_tree().change_scene_to_file("res://mainscene.tscn")
 		
 	# --- GET INPUT ---

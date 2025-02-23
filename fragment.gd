@@ -1,11 +1,15 @@
 extends RigidBody2D
 
+
+
 var homeBase: Vector2 = Vector2.ZERO
 var velocity: Vector2 = Vector2.ZERO
 var hp = 100
 enum ENEMY_STATE {IDLE, APPROACH, WINDUP, ATTACK}
 var state = ENEMY_STATE.IDLE
 var player_detected = false
+
+signal health_depleted
 
 @export var speed: float = 100.0  # Movement speed
 @export var attack_radius: float = 200.0  # Distance to stop and attack
@@ -46,6 +50,7 @@ func _ready() -> void:
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
+
 	rotation += rot_speed * delta
 	rot_speed = move_toward(rot_speed, 0, delta * 20)
 
@@ -56,6 +61,7 @@ func _process(delta: float) -> void:
 		get_parent().add_child(new_audio_player)
 		new_audio_player.play()
 		new_audio_player.finished.connect(func(): new_audio_player.queue_free())  # Cleanup after play
+		health_depleted.emit()
 		queue_free()
 
 	if state == ENEMY_STATE.IDLE:

@@ -7,7 +7,7 @@
 [ext_resource type="PackedScene" uid="uid://co13brj2pgpmj" path="res://custom_camera_2d.tscn" id="3_n2w5j"]
 [ext_resource type="Texture2D" uid="uid://b6hw0spu0jxfg" path="res://icon.svg" id="3_o4v3b"]
 [ext_resource type="PackedScene" uid="uid://b8bf6sdmc2hio" path="res://prism.tscn" id="4_ikhfe"]
-[ext_resource type="PackedScene" uid="uid://8ody6tqb4jmi" path="res://UI.tscn" id="7_ork3y"]
+[ext_resource type="PackedScene" path="res://UI.tscn" id="7_ork3y"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_ye0qq"]
 shader = ExtResource("2_uj06r")
@@ -239,5 +239,8 @@ offset_bottom = -288.0
 
 [node name="Prism" parent="." instance=ExtResource("4_ikhfe")]
 position = Vector2(4526, -147)
+
+[node name="Node2D" type="Node2D" parent="."]
+position = Vector2(6790, -31)
 
 [connection signal="healthValue" from="Player" to="CustomCamera2D/Control" method="_on_player_health_value"]
