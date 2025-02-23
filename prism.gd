@@ -32,6 +32,7 @@ var swingSound = preload("res://sounds/prism/swing.wav")
 
 #new
 @onready var sprite = $PrismSprite  
+@onready var sprite_anim = $PrismSprite/AnimationPlayer
 
 var facing_angle = -1
 
@@ -91,6 +92,7 @@ func _process(delta: float) -> void:
 	#do state transitions
 	if(state == ENEMY_STATE.IDLE):
 		#print("idle")
+		sprite_anim.play("idle")
 		var direction_to_home = (homeBase - global_position).normalized()
 		velocity.x = (direction_to_home * speed/3).x  # Move towards home base
 		

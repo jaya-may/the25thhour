@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://b6mvs882hyoqv"
-path="res://.godot/imported/arm_upper_back.png-ffef58f238c64b4e27ac71a96ffabe55.ctex"
+uid="uid://cpio0lypvmlm4"
+path="res://.godot/imported/BG1 (up to Artemis).png-90a2413e28d6ac2eb504934413519839.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://EnemyAssets/Prism/Sprites/arm_upper_back.png"
-dest_files=["res://.godot/imported/arm_upper_back.png-ffef58f238c64b4e27ac71a96ffabe55.ctex"]
+source_file="res://Scenery/BG1 (up to Artemis).png"
+dest_files=["res://.godot/imported/BG1 (up to Artemis).png-90a2413e28d6ac2eb504934413519839.ctex"]
 
 [params]
 

@@ -2,6 +2,5 @@
 
 [ext_resource type="Script" path="res://camera_2d.gd" id="1_e4tek"]
 
-[node name="CustomCamera2D" type="Camera2D" node_paths=PackedStringArray("TargetNode")]
+[node name="CustomCamera2D" type="Camera2D"]
 script = ExtResource("1_e4tek")
-TargetNode = NodePath("")

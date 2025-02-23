@@ -1,5 +1,7 @@
 extends CharacterBody2D
 
+signal healthValue;
+
 @onready var hitboxL = $HitboxL  # Reference to the Hitbox Area2D
 @onready var hitboxR = $HitboxR  # Reference to the Hitbox Area2D
 @onready var hitboxSlam = $HitboxSlam
@@ -16,6 +18,8 @@ var finisherSound = preload("res://sounds/playersounds/finisher.mp3")
 
 @onready var punch_player = $Punch 
 @onready var finisher_player = $Finisher
+
+@onready var player_animation = $PlayerSprites/Animation
 
 
 enum CHAR_STATE {NORMAL,SLAM,DASH,ATTACK}
@@ -94,6 +98,7 @@ func _process(delta: float):
 
 	direction = Vector2(Input.get_axis("Left", "Right"), 0)
 	
+	
 	if Input.is_action_just_pressed("Jump"):
 		jump_pressed = true
 	if Input.is_action_pressed("Jump"):
@@ -108,6 +113,7 @@ func _process(delta: float):
 
 		#run=true	
 	if Input.is_action_just_pressed("Slam") && not is_on_floor():
+		player_animation.play("slam")
 		slam_this_frame = true
 		
 	
@@ -121,6 +127,7 @@ func _process(delta: float):
 
 func _physics_process(delta: float) -> void:
 	
+	
 	jumpBuffer -= delta  
 	dashCounter+=delta
 	justSlammedGround-=delta
@@ -128,8 +135,7 @@ func _physics_process(delta: float) -> void:
 	#determine which physics model to use rn
 	if(cur_state == CHAR_STATE.NORMAL):	
 		defaultPhysics(delta)
-		
-	
+			
 	elif(cur_state== CHAR_STATE.ATTACK):
 		attackPhysics(delta)
 		
@@ -145,6 +151,8 @@ func _physics_process(delta: float) -> void:
 				body.get_parent().Slam(melee_damage/2,self.global_position,facing_angle)
 				velocity.y = -450
 				cur_state = CHAR_STATE.NORMAL
+		
+		
 	
 	elif (cur_state == CHAR_STATE.DASH):
 		var a
@@ -159,6 +167,19 @@ func _physics_process(delta: float) -> void:
 		endlag = 0
 		buffered_attack = false
 		melee_attack_this_frame = false
+	
+	if velocity.y > 0:
+		player_animation.play("slam")
+	
+	if abs(velocity.x) > 0:
+		if velocity.x > 0:
+			player_animation.flip_h = true
+			player_animation.play("run")
+		else:
+			player_animation.flip_h = false
+			player_animation.play("run")
+	else:
+		player_animation.play("default")
 	
 	move_and_slide()
 
@@ -263,6 +284,7 @@ func slamPhysics(delta: float) -> void:
 
 func modifyHp(hpChange: float)-> void:
 	hp+=hpChange
+	healthValue.emit(hp)
 	print("hp is now: ",hp)
 	audio_player.stream = hitSound
 	audio_player.play()

@@ -1,6 +1,7 @@
-[gd_scene load_steps=3 format=3 uid="uid://b1e3w8odvtfkx"]
+[gd_scene load_steps=4 format=3 uid="uid://b1e3w8odvtfkx"]
 
 [ext_resource type="Script" path="res://laser.gd" id="1_gvy3p"]
+[ext_resource type="PackedScene" uid="uid://3vgononp5qp2" path="res://Effects/Laser.tscn" id="2_fnkrr"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_5wjrd"]
 size = Vector2(20, 556)
@@ -11,3 +12,7 @@ script = ExtResource("1_gvy3p")
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 position = Vector2(0, 39)
 shape = SubResource("RectangleShape2D_5wjrd")
+
+[node name="Laser" parent="." instance=ExtResource("2_fnkrr")]
+position = Vector2(0, 35.87)
+scale = Vector2(0.22, 8.535)

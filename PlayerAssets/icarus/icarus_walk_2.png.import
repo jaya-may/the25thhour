@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://b6mvs882hyoqv"
-path="res://.godot/imported/arm_upper_back.png-ffef58f238c64b4e27ac71a96ffabe55.ctex"
+uid="uid://c6c5avkuhajkq"
+path="res://.godot/imported/icarus_walk_2.png-1e4e43ca235c48de12d7bd2b9966905b.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://EnemyAssets/Prism/Sprites/arm_upper_back.png"
-dest_files=["res://.godot/imported/arm_upper_back.png-ffef58f238c64b4e27ac71a96ffabe55.ctex"]
+source_file="res://PlayerAssets/icarus/icarus_walk_2.png"
+dest_files=["res://.godot/imported/icarus_walk_2.png-1e4e43ca235c48de12d7bd2b9966905b.ctex"]
 
 [params]
 

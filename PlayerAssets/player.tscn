@@ -1,6 +1,7 @@
-[gd_scene load_steps=6 format=3 uid="uid://b50dtn2oaxiey"]
+[gd_scene load_steps=7 format=3 uid="uid://b50dtn2oaxiey"]
 
-[ext_resource type="Script" path="res://player.gd" id="1_gdvfy"]
+[ext_resource type="Script" path="res://PlayerAssets/player.gd" id="1_gdvfy"]
+[ext_resource type="PackedScene" uid="uid://bu3uh52y1oew1" path="res://PlayerAssets/player_sprites.tscn" id="2_skyq2"]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_ruog7"]
 
@@ -58,3 +59,7 @@ shape = SubResource("RectangleShape2D_fsk8f")
 [node name="Punch" type="AudioStreamPlayer2D" parent="."]
 
 [node name="Finisher" type="AudioStreamPlayer2D" parent="."]
+
+[node name="PlayerSprites" parent="." instance=ExtResource("2_skyq2")]
+position = Vector2(-2, -3)
+scale = Vector2(1.045, 1.045)
