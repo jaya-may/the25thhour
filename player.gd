@@ -12,10 +12,10 @@ var dashSound = preload("res://sounds/playersounds/dash.mp3")
 
 
 var punch = preload("res://sounds/playersounds/punch.mp3")
-var finisher = preload("res://sounds/playersounds/finisher.mp3")
+var finisherSound = preload("res://sounds/playersounds/finisher.mp3")
 
 @onready var punch_player = $Punch 
-@onready var finisher_player = $Finisherf 
+@onready var finisher_player = $Finisher
 
 
 enum CHAR_STATE {NORMAL,SLAM,DASH,ATTACK}
@@ -38,7 +38,7 @@ var melee_attack_this_frame = false # r we tryna melee
 const SPEED = 300.0
 const JUMP_VELOCITY = -350.0
 const AIR_DECEL = 400
-const AIR_ACEL = 440
+const AIR_ACEL = 700
 const GROUND_DECEL = 1900
 const GROUND_ACEL = 300
 const AIR_SPEED_CAP = 800
@@ -64,10 +64,11 @@ var dash_this_frame = false
 var dashCounter = 0
 
 #slam
+const SLAM_JUMP_HEIGHT = 50
 const SLAM_DOWNWARDS_SPEED = 500
 const SLAM_SIDEWAYS_SPEED = 100
 const SLAM_STARTUP = .1
-const SLAMSTORE_LENIENCY = 0.3
+const SLAMSTORE_LENIENCY = 0.4
 var slam_counter = 0
 var slam_this_frame = false
 var slam_just_started = false
@@ -212,13 +213,16 @@ func defaultPhysics(delta: float) -> void:
 		jump_pressed = false
 		
 	if jumpBuffer > 0 and is_on_floor():
+		
 		if counter < TIME_TO_BHOP && abs(velocity.x)>150 && facing_angle == prior_facing_angle:
 			#print("hi")
 			velocity.x = prior_vel
 		counter  = 0
 		prior_facing_angle = facing_angle
 			
-		velocity.y = JUMP_VELOCITY - abs(velocity.x)/15
+		var adder = 0
+		if(justSlammedGround > 0): adder = SLAM_JUMP_HEIGHT
+		velocity.y = JUMP_VELOCITY - (abs(velocity.x)/15) - adder
 		if direction.x != 0:
 			velocity.x += velocity.x / JUMP_BOOST_DIV
 		jumpBuffer = 0  # Reset jump buffer after jumping
@@ -233,12 +237,12 @@ func defaultPhysics(delta: float) -> void:
 
 func attackPhysics(delta: float) -> void:
 	if not is_on_floor():
-		velocity.y += ProjectSettings.get("physics/2d/default_gravity") * delta
+		velocity.y += ProjectSettings.get("physics/2d/default_gravity")*0.6 * delta
 	if is_on_floor():
 		velocity.x = move_toward(velocity.x, 0, GROUND_DECEL * delta)
 	else:
 		if(direction.x!=0):
-			velocity.x = direction.x * SLAM_SIDEWAYS_SPEED /2
+			velocity.x = direction.x * SLAM_SIDEWAYS_SPEED*2
 		velocity.x = move_toward(velocity.x, 0, AIR_DECEL * delta)
 
 func slamPhysics(delta: float) -> void:
@@ -309,7 +313,7 @@ func melee_attack():
 		finisher = 1
 	
 	if(current_melee_hit == MAX_COMBO):
-		finisher_player.stream = finisher
+		finisher_player.stream = finisherSound
 		finisher_player.play()
 		endlag = 0.8
 		finisher = 1.5
@@ -325,7 +329,7 @@ func melee_attack():
 		if body.get_parent().has_method("Hit"):
 			body.get_parent().Hit(melee_damage * finisher,self.global_position,facing_angle)
 			endlag+=0.1
-			velocity.y = -200
+			velocity.y = -180
 		
 		#print("This is an enemy!")
 		#print("attacked")

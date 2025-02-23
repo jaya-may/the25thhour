@@ -5,6 +5,7 @@
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_ruog7"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_xe1gb"]
+size = Vector2(29, 31)
 
 [sub_resource type="AudioStreamWAV" id="AudioStreamWAV_hkr3s"]
 
@@ -16,6 +17,7 @@ position = Vector2(0, -1)
 script = ExtResource("1_gdvfy")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+scale = Vector2(1.2, 1.5)
 shape = SubResource("CapsuleShape2D_ruog7")
 
 [node name="HitboxL" type="Area2D" parent="."]

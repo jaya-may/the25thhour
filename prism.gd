@@ -24,7 +24,10 @@ var attacking = false
 @onready var audio_player = $AudioStreamPlayer2D 
 @onready var swingPlayer = $Swing 
 
-var punishment = preload("res://sounds/prism/punishment.wav")
+var punishment = [
+	preload("res://sounds/prism/punishment.wav"),
+	preload("res://sounds/prism/dust.wav")
+	]
 var swingSound = preload("res://sounds/prism/swing.wav")
 
 #new
@@ -170,9 +173,9 @@ func _process(delta: float) -> void:
 func Slam(damage: float, playerpos: Vector2, facing_angle: int) -> void:
 	hp += damage
 	if(state == ENEMY_STATE.WINDUP):
-		var probability : int = 2 # 1/10 chance
+		var probability : int = 4 # 1/10 chance
 		if (randi() % probability) == (probability - 1):
-			audio_player.stream = punishment  # Pick a random sound
+			audio_player.stream = punishment[randi() % punishment.size()]   # Pick a random sound
 			audio_player.play()
 		state = ENEMY_STATE.COUNTER
 		counterPhase = 0
@@ -180,9 +183,9 @@ func Slam(damage: float, playerpos: Vector2, facing_angle: int) -> void:
 
 func Hit(damage: float, playerpos: Vector2, facing_angle: int) -> void:
 	if(state == ENEMY_STATE.WINDUP):
-		var probability : int = 2 # 1/10 chance
+		var probability : int = 4 # 1/10 chance
 		if (randi() % probability) == (probability - 1):
-			audio_player.stream = punishment  # Pick a random sound
+			audio_player.stream = punishment[randi() % punishment.size()]   # Pick a random sound
 			audio_player.play()
 		state = ENEMY_STATE.COUNTER
 		counterPhase = 0
