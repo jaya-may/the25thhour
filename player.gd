@@ -2,13 +2,21 @@ extends CharacterBody2D
 
 @onready var hitboxL = $HitboxL  # Reference to the Hitbox Area2D
 @onready var hitboxR = $HitboxR  # Reference to the Hitbox Area2D
-
+@onready var hitboxSlam = $HitboxSlam
 
 var hitSound = preload("res://sounds/playersounds/hurtsound.mp3")
 @onready var audio_player = $AudioStreamPlayer2D 
 
 var dashSound = preload("res://sounds/playersounds/dash.mp3")
 @onready var dash_player = $Dashy 
+
+
+var punch = preload("res://sounds/playersounds/punch.mp3")
+var finisher = preload("res://sounds/playersounds/finisher.mp3")
+
+@onready var punch_player = $Punch 
+@onready var finisher_player = $Finisherf 
+
 
 enum CHAR_STATE {NORMAL,SLAM,DASH,ATTACK}
 var cur_state = CHAR_STATE.NORMAL
@@ -30,7 +38,7 @@ var melee_attack_this_frame = false # r we tryna melee
 const SPEED = 300.0
 const JUMP_VELOCITY = -350.0
 const AIR_DECEL = 400
-const AIR_ACEL = 500
+const AIR_ACEL = 440
 const GROUND_DECEL = 1900
 const GROUND_ACEL = 300
 const AIR_SPEED_CAP = 800
@@ -76,6 +84,10 @@ func _ready():
 	add_to_group("Player")
 
 func _process(delta: float):
+	#print("hp: ",hp)
+	if(hp<0):
+		queue_free()
+		
 	# --- GET INPUT ---
 
 	direction = Vector2(Input.get_axis("Left", "Right"), 0)
@@ -99,7 +111,7 @@ func _process(delta: float):
 	
 	if Input.is_action_just_pressed("Melee"):
 		melee_attack_this_frame=true
-		print("trying to melee")
+		#print("trying to melee")
 		
 	#function calls if needed
 	update_melee_status(delta)
@@ -121,13 +133,29 @@ func _physics_process(delta: float) -> void:
 		
 	elif (cur_state == CHAR_STATE.SLAM):
 		slamPhysics(delta)
+		var overlap
+		overlap = hitboxSlam.get_overlapping_areas()
+
+		# Loop through each body and print its name (or do something else)
+		for body in overlap:
+			#print("Hitbox intersects with:", body.name)
+			if body.get_parent().has_method("Hit"):
+				body.get_parent().Slam(melee_damage/2,self.global_position,facing_angle)
+				velocity.y = -450
+				cur_state = CHAR_STATE.NORMAL
 	
+	elif (cur_state == CHAR_STATE.DASH):
+		var a
 	
 	#manage state changes, slam is given priority
 	if(slam_this_frame):
 		cur_state = CHAR_STATE.SLAM
 		slam_this_frame = false
 		slam_just_started=true
+		melee_attack_this_frame = false
+		current_melee_hit = 0
+		endlag = 0
+		buffered_attack = false
 		melee_attack_this_frame = false
 	
 	move_and_slide()
@@ -185,7 +213,7 @@ func defaultPhysics(delta: float) -> void:
 		
 	if jumpBuffer > 0 and is_on_floor():
 		if counter < TIME_TO_BHOP && abs(velocity.x)>150 && facing_angle == prior_facing_angle:
-			print("hi")
+			#print("hi")
 			velocity.x = prior_vel
 		counter  = 0
 		prior_facing_angle = facing_angle
@@ -209,6 +237,8 @@ func attackPhysics(delta: float) -> void:
 	if is_on_floor():
 		velocity.x = move_toward(velocity.x, 0, GROUND_DECEL * delta)
 	else:
+		if(direction.x!=0):
+			velocity.x = direction.x * SLAM_SIDEWAYS_SPEED /2
 		velocity.x = move_toward(velocity.x, 0, AIR_DECEL * delta)
 
 func slamPhysics(delta: float) -> void:
@@ -261,6 +291,8 @@ func update_melee_status(delta: float)-> void:
 		cur_state = CHAR_STATE.NORMAL
 		current_melee_hit = 0
 	
+	
+	
 
 func melee_attack():
 	var finisher = false
@@ -271,12 +303,17 @@ func melee_attack():
 	print(current_melee_hit)
 	
 	if(current_melee_hit<MAX_COMBO):
-		endlag = 0.15
+		punch_player.stream = punch
+		punch_player.play()
+		endlag = 0.23
 		finisher = 1
 	
 	if(current_melee_hit == MAX_COMBO):
+		finisher_player.stream = finisher
+		finisher_player.play()
 		endlag = 0.8
 		finisher = 1.5
+		
 
 	var overlap
 	if(facing_angle==1): overlap = hitboxR.get_overlapping_areas()
@@ -288,6 +325,8 @@ func melee_attack():
 		if body.get_parent().has_method("Hit"):
 			body.get_parent().Hit(melee_damage * finisher,self.global_position,facing_angle)
 			endlag+=0.1
+			velocity.y = -200
 		
 		#print("This is an enemy!")
 		#print("attacked")
+	

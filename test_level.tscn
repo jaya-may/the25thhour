@@ -1,8 +1,9 @@
-[gd_scene load_steps=5 format=3 uid="uid://da1iqw3dxfvwq"]
+[gd_scene load_steps=6 format=3 uid="uid://da1iqw3dxfvwq"]
 
 [ext_resource type="PackedScene" uid="uid://b50dtn2oaxiey" path="res://player.tscn" id="1_gmb04"]
 [ext_resource type="Script" path="res://camera_2d.gd" id="2_d4sjs"]
 [ext_resource type="PackedScene" uid="uid://d2lvreve3ab8u" path="res://fragment.tscn" id="3_7wgrf"]
+[ext_resource type="PackedScene" uid="uid://b8bf6sdmc2hio" path="res://prism.tscn" id="4_j02sv"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_hmaxl"]
 size = Vector2(589, 20)
@@ -51,3 +52,6 @@ TargetNode = NodePath("../Player")
 
 [node name="Fragment" parent="." instance=ExtResource("3_7wgrf")]
 position = Vector2(-254, -11)
+
+[node name="Prism" parent="." instance=ExtResource("4_j02sv")]
+position = Vector2(1363, -53)

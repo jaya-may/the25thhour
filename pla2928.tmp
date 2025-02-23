@@ -52,7 +52,3 @@ collision_mask = 192
 position = Vector2(0, 6)
 scale = Vector2(1.5, 3)
 shape = SubResource("RectangleShape2D_fsk8f")
-
-[node name="Punch" type="AudioStreamPlayer2D" parent="."]
-
-[node name="Finisher" type="AudioStreamPlayer2D" parent="."]
