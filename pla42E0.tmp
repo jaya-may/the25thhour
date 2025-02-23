@@ -1,0 +1,22 @@
+[gd_scene load_steps=4 format=3 uid="uid://b50dtn2oaxiey"]
+
+[ext_resource type="Script" path="res://player.gd" id="1_gdvfy"]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_ruog7"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_xe1gb"]
+
+[node name="Player" type="CharacterBody2D" groups=["Player"]]
+position = Vector2(0, -1)
+script = ExtResource("1_gdvfy")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("CapsuleShape2D_ruog7")
+
+[node name="Hitbox" type="Area2D" parent="."]
+collision_layer = 64
+collision_mask = 192
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Hitbox"]
+scale = Vector2(2, 2)
+shape = SubResource("RectangleShape2D_xe1gb")

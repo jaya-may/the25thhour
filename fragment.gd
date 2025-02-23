@@ -1,6 +1,7 @@
 extends RigidBody2D
 
 
+var hp = 100
 enum ENEMY_STATE {IDLE,APPROACH,WINDUP,ATTACK}
 var state  = ENEMY_STATE.IDLE
 var player_detected = false
@@ -21,6 +22,13 @@ var windup_timer = 2
 # SOUNDS
 
 @onready var audio_player = $AudioStreamPlayer2D 
+
+var hitSounds = [
+	preload("res://sounds/vhitsounds/vhit1.ogg"),
+	preload("res://sounds/vhitsounds/vhit2.wav")
+] 
+
+var deathSound = preload("res://sounds/vhitsounds/vdeath.mp3")
 var sounds = [
 	preload("res://sounds/ashlatin.mp3"),
 	preload("res://sounds/goodbye idiot.mp3"),
@@ -37,13 +45,23 @@ func _ready() -> void:
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
+	
+	if(hp < 0):
+		var new_audio_player = AudioStreamPlayer2D.new()
+		new_audio_player.stream = deathSound
+		new_audio_player.global_position = global_position
+		get_parent().add_child(new_audio_player)
+		new_audio_player.play()
+		new_audio_player.finished.connect(func(): new_audio_player.queue_free())  # Cleanup after play
+		
+		queue_free()
 	#print(state)
 	if(state==ENEMY_STATE.IDLE):
 		if(player_detected):
 			if(played_sound % 5 == 0):
 				audio_player.stream = sounds[randi() % sounds.size()]  # Pick a random sound
 				audio_player.play()
-				print("playingh sounds,.")
+				#print("playingh sounds,.")
 			
 			played_sound+=1
 			state=ENEMY_STATE.APPROACH
@@ -58,13 +76,13 @@ func _process(delta: float) -> void:
 				state = ENEMY_STATE.APPROACH
 			#else:
 			windup_timer = 2
-			print("kills you.")
+			#print("kills you.")
 			state = ENEMY_STATE.ATTACK
 	if(state==ENEMY_STATE.ATTACK):
 		var laser = preload("res://laser.tscn").instantiate()
 		get_parent().add_child(laser)  # Make sure the laser is added to the scene tree
 		laser.global_position = player.global_position  # Spawn at enemy position
-		print("laser spawned")
+		#print("laser spawned")
 		state = ENEMY_STATE.IDLE
 		
 func _physics_process(delta: float) -> void:
@@ -81,7 +99,7 @@ func _on_player_entered(body):
 	print("Detected:", body.name)
 	if body.is_in_group("Player"):  # Ensure player is detected
 		player = body
-		print("I CAN SEE YOU.")
+		#print("I CAN SEE YOU.")
 		player_detected = true
 
 func _on_player_exited(body):
@@ -89,3 +107,17 @@ func _on_player_exited(body):
 		player = null
 		state = ENEMY_STATE.IDLE
 		player_detected=false
+		
+func Hit(damage: float, playerpos: Vector2, facing_angle: int) -> void:
+	if not audio_player.playing:  # Only play if nothing is currently playing
+		audio_player.stream = hitSounds[randi() % hitSounds.size()]  # Pick a random sound
+		audio_player.play()
+	else:
+		var new_audio_player = AudioStreamPlayer2D.new()
+		new_audio_player.stream = hitSounds[randi() % hitSounds.size()]
+		new_audio_player.global_position = global_position
+		get_parent().add_child(new_audio_player)
+		new_audio_player.play()
+		new_audio_player.finished.connect(func(): new_audio_player.queue_free())  # Cleanup after play
+		
+	hp+=damage
